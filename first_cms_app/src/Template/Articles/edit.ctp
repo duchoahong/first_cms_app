@@ -1,6 +1,5 @@
 <h1>Edit Article</h1>
 <?php
-	echo $this->Form->control('user_id', ['type' => 'hidden']);
 	echo$this->Form->control('tag_string', ['type' => 'text']);
 	echo $this->Form->control('title');
 	echo $this->Form->control('body', ['rows' => '3']);

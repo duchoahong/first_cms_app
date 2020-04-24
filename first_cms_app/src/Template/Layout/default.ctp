@@ -48,7 +48,7 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
         </div>
     </nav>
     <?= $this->Flash->render() ?>
-    <div class="container clearfix">
+    <div class="container clearfix" style="max-width: 1000px; margin: 0 auto;">
         <?= $this->fetch('content') ?>
     </div>
     <footer>

@@ -9,6 +9,7 @@ class ArticlesController extends AppController
 		parent::initialize();
 		$this->loadComponent('Paginator');
 		$this->loadComponent('Flash');// Include the FlashComponent
+		$this->Auth->allow(['tags']);
 	}
 
 	public function index()
@@ -35,7 +36,7 @@ class ArticlesController extends AppController
 			$article = $this->Articles->patchEntity($article, $this->request->getData());
 			// Hardcoding the user_id is temporary, and will be removed later
 			// when we build authentication out.
-			$article->user_id = 1;
+			$article->user_id = $this->Auth->user('id');
 			if($this->Articles->save($article)) 
 				{
 					$this->Flash->success(__('Your article has been saved.'));
@@ -143,4 +144,25 @@ class ArticlesController extends AppController
 		return $out;
 	}
 
+	public function isAuthorized($user)
+	{
+		$action = $this->request->getParam('action');
+		// The add and tags actions always allowed to logged in users.
+		if (in_array($action, ['add', 'tags']))
+		{
+			return true;
+		}
+
+		// All other actions require a slug.
+		$slug = $this->request->getParam('pass.0');
+		if (!$slug)
+		{
+			return false;
+		}
+
+		// Check that the article belongs to the current user.
+		$article = $this->Articles->findBySlug($slug)->first();
+
+		return $article->user_id === $user['id'];
+	}
 }
